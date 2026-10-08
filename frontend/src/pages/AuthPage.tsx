@@ -72,7 +72,7 @@ export default function AuthPage() {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: 'spring', stiffness: 200, damping: 22 }}>
 
-        <div className={s.logo}>♟ Knight<span>OS</span></div>
+        <div className={s.logo}>♟ Chess<span>Khelo</span></div>
         <div className={s.tagline}>Climb the ranks. Beat the AI. Dominate the board.</div>
 
         <div className={s.tabs}>

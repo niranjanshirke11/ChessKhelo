@@ -68,7 +68,7 @@ export default function LandingPage() {
 
       {/* Nav */}
       <header className={s.header}>
-        <div className={s.hlogo}>Knight<span>OS</span></div>
+        <div className={s.hlogo}>Chess<span>Khelo</span></div>
         <div className={s.hlinks}>
           <a href="#features">Features</a>
           <a href="#ranks">Ranks</a>
@@ -80,9 +80,9 @@ export default function LandingPage() {
       {/* Hero */}
       <section className={s.hero}>
         <motion.div className={s.heroL} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7 }}>
-          <div className={s.liveBadge}><span className="live-dot" />  Season 4 · Now Live</div>
-          <h1 className={s.heroTitle}>The Competitive<br /><span className={s.gold}>Chess Platform</span></h1>
-          <p className={s.heroDesc}>Ranked Elo play, AI training, real-time multiplayer, and deep post-game analytics — built for players who take the board seriously.</p>
+          <div className={s.liveBadge}><span className="live-dot" />  Online · Multiplayer Chess</div>
+          <h1 className={s.heroTitle}>The Modern<br /><span className={s.gold}>Chess Platform</span></h1>
+          <p className={s.heroDesc}>Ranked Elo matchmaking, AI practice, real-time multiplayer, and post-game analytics — built with React, Node.js, and WebSockets.</p>
           <div className={s.ctas}>
             <button className="btn btn-gold btn-xl" onClick={() => nav('/auth')}>Start Playing Free →</button>
             <button className="btn btn-outline btn-lg" onClick={() => nav('/auth?mode=login')}>Sign In</button>
@@ -166,8 +166,8 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className={s.footer}>
-        <span className={s.flogo}>KnightOS</span>
-        <span style={{ color: 'var(--muted)', fontSize: '.78rem' }}>© 2024 KnightOS · Built for champions</span>
+        <span className={s.flogo}>ChessKhelo</span>
+        <span style={{ color: 'var(--muted)', fontSize: '.78rem' }}>© 2026 ChessKhelo · Real-Time Multiplayer Chess</span>
         <div style={{ display: 'flex', gap: 16, fontSize: '.78rem' }}>
           {['Privacy','Terms','Contact'].map(l => <a key={l} href="#" style={{ color: 'var(--muted)' }}>{l}</a>)}
         </div>

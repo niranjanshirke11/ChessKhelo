@@ -11,7 +11,7 @@ const api = axios.create({
 // Attach JWT token automatically
 api.interceptors.request.use((config) => {
   try {
-    const s = localStorage.getItem("ko-auth");
+    const s = localStorage.getItem("chesskhelo-auth") || localStorage.getItem("ko-auth");
     if (s) {
       const token = JSON.parse(s)?.state?.token;
       if (token) {
@@ -29,7 +29,7 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       try {
-        const s = localStorage.getItem("ko-auth");
+        const s = localStorage.getItem("chesskhelo-auth") || localStorage.getItem("ko-auth");
 
         if (!s) return Promise.reject(error);
 
@@ -44,7 +44,7 @@ api.interceptors.response.use(
           const newToken = res.data.data.token;
 
           parsed.state.token = newToken;
-          localStorage.setItem("ko-auth", JSON.stringify(parsed));
+          localStorage.setItem("chesskhelo-auth", JSON.stringify(parsed));
 
           error.config.headers.Authorization = `Bearer ${newToken}`;
 

@@ -21,7 +21,7 @@ export default function Layout() {
   return (
     <div className={s.shell}>
       <nav className={s.nav}>
-        <NavLink to="/app/play" className={s.logo}>Knight<span>OS</span></NavLink>
+        <NavLink to="/app/play" className={s.logo}>Chess<span>Khelo</span></NavLink>
 
         <div className={s.links}>
           {LINKS.map(({ to, l }) => (

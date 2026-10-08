@@ -24,7 +24,7 @@ interface AuthStore {
 }
 
 const DEMO: AppUser = {
-  id: 'demo-001', username: 'GrandMaster_X', email: 'demo@knightos.app',
+  id: 'demo-001', username: 'GrandMaster_X', email: 'demo@chesskhelo.app',
   rating: 1847, rankTier: 'Gold', plan: 'free', avatar: '♛', country: '🇮🇳',
   stats: { gamesPlayed: 312, wins: 200, losses: 96, draws: 16, winStreak: 5, bestStreak: 12, accuracy: 87 },
   badges: ['Gold League', 'Speed Demon', 'Top 500'],
@@ -55,7 +55,7 @@ export const useAuth = create<AuthStore>()(
           const { data } = await api.post('/auth/register', { username, email, password: pwd, country });
           const { token, refreshToken, user } = data.data;
           set({ token, refreshToken, user, isAuthenticated: true, isLoading: false });
-          toast.success(`Welcome to KnightOS, ${username}! 🎉`);
+          toast.success(`Welcome to ChessKhelo, ${username}! 🎉`);
         } catch (e: any) {
           const msg = e.response?.data?.error || e.response?.data?.errors?.[0]?.msg || 'Registration failed';
           set({ error: msg, isLoading: false }); toast.error(msg); throw e;
@@ -93,6 +93,6 @@ export const useAuth = create<AuthStore>()(
         toast.success('Demo loaded — explore freely! ♟');
       },
     }),
-    { name: 'ko-auth', partialize: s => ({ token: s.token, refreshToken: s.refreshToken, user: s.user, isAuthenticated: s.isAuthenticated }) }
+    { name: 'chesskhelo-auth', partialize: s => ({ token: s.token, refreshToken: s.refreshToken, user: s.user, isAuthenticated: s.isAuthenticated }) }
   )
 );

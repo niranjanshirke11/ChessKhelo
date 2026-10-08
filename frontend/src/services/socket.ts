@@ -7,7 +7,7 @@ export function getSocket(): Socket {
   // Get current token
   let token = '';
   try {
-    const st = localStorage.getItem('ko-auth');
+    const st = localStorage.getItem('chesskhelo-auth') || localStorage.getItem('ko-auth');
     token = st ? JSON.parse(st)?.state?.token || '' : '';
   } catch(_) {}
 

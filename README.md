@@ -1,111 +1,150 @@
-# ♟ KnightOS — Competitive Chess SaaS Platform
+# ♟ ChessKhelo — Cloud-Based Real-Time Multiplayer Chess Application
 
-Full-stack chess platform with ranked Elo play, AI training, real-time multiplayer,
-leaderboards, player profiles, and a premium monetisation tier.
+**ChessKhelo** is a modern, responsive, and minimalist full-stack web application designed for competitive online chess, AI practice, real-time multiplayer matchmaking, tactical puzzle solving, and post-game move analysis.
 
----
-
-## 🌐 Live Deployment
-
-| Service | URL |
-|---|---|
-| 🖥 **Frontend** | https://knight-os-frontend.vercel.app |
-| 🔧 **Backend API** | https://humorous-ambition-production-e96b.up.railway.app |
-| 🗄 **Database** | MongoDB Atlas (cloud) |
+Built as a **B.Sc. Computer Science Final-Semester Project**, this application emphasizes clean architecture, low-latency WebSocket communication, robust Elo ranking mathematics, and containerized cloud deployment on **Amazon Web Services (AWS)**.
 
 ---
 
-## 🗂 Project Structure
+## 🌟 Key Features
+
+- **⚡ Real-Time Multiplayer:** Instant matchmaking by time control (`1 min Bullet`, `3 min Blitz`, `10 min Rapid`, `15 min Classical`) powered by Socket.IO.
+- **🤖 Offline & AI Engine:** Play against 8 adjustable difficulty tiers powered by Stockfish WebAssembly with zero server lag.
+- **🏆 FIDE Elo Rating System:** Dynamic rating calculations using the standard logistic Elo formula with automated rank tier classification (`Bronze`, `Silver`, `Gold`, `Platinum`, `Diamond`).
+- **🛡 Complete Chess Rule Enforcement:** Move validation, castling, en passant, promotion, check, checkmate, stalemate, 50-move rule, and draw agreement handled via `chess.js`.
+- **🎵 Procedural Web Audio:** Zero static audio file dependencies; procedural sound synthesis for piece moves, captures, checks, and victories.
+- **🧩 Tactical Chess Puzzles:** Daily offline tactical challenges with immediate move validation and streak tracking.
+- **📊 Post-Game Analysis:** Move-by-move position evaluator detecting blunders, inaccuracies, and calculating player accuracy percentages.
+- **👥 Social & Spectator Mode:** Friend requests, direct match challenges, in-game chat, and live game spectating with viewer counts.
+- **🔒 Secure Authentication:** JWT Access & Refresh token rotation, bcrypt salted password hashing (12 rounds), and an instant **"Demo Account"** mode for offline evaluation.
+
+---
+
+## 🛠 Technology Stack
+
+### Frontend
+- **Framework:** React 18 (TypeScript)
+- **Bundler / Dev Server:** Vite 5
+- **State Management:** Zustand 4 with `localStorage` persistence
+- **Routing:** React Router v6
+- **Animations:** Framer Motion
+- **Chess Engine:** `chess.js` & Stockfish (Web Worker)
+- **Audio:** Native Browser Web Audio API
+
+### Backend
+- **Runtime:** Node.js 20 LTS
+- **Server Framework:** Express.js 4 (TypeScript)
+- **Real-Time Communication:** Socket.IO 4
+- **Database:** MongoDB Atlas (Mongoose ODM 8)
+- **Security:** Helmet, CORS, Express-Rate-Limit, bcryptjs, jsonwebtoken
+- **Logging:** Winston + Morgan
+
+### DevOps & Cloud
+- **Containers:** Docker & Docker Compose
+- **Reverse Proxy:** Nginx (Alpine)
+- **Cloud Hosting Target:** AWS (EC2, S3/CloudFront, Security Groups, CloudWatch)
+
+---
+
+## 📂 Project Structure
 
 ```
-knightos/
-├── backend/          Node.js + Express + TypeScript + MongoDB + Socket.io
-├── frontend/         React 18 + TypeScript + Vite + Zustand + Framer Motion
-├── nginx/            Reverse-proxy config (production)
-├── docker-compose.yml
-└── README.md         ← you are here
+ChessKhelo/
+├── backend/                   # Node.js + Express + TypeScript Backend
+│   ├── src/
+│   │   ├── controllers/       # Route logic (auth, games, users, friends)
+│   │   ├── middleware/        # JWT auth, error handling, rate limiting
+│   │   ├── models/            # Mongoose schemas (User, Game, FriendRequest)
+│   │   ├── routes/            # REST API endpoints
+│   │   ├── services/          # Socket.IO, database connection, Elo math, logger
+│   │   ├── types/             # Shared TypeScript interfaces
+│   │   ├── app.ts             # Express app & middleware configuration
+│   │   └── index.ts           # Server bootstrap & port listener
+│   ├── .env.example           # Backend environment template
+│   ├── Dockerfile             # Multi-stage Node production container
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── frontend/                  # React + Vite + TypeScript Frontend
+│   ├── src/
+│   │   ├── components/        # ChessBoard, Layout shell, Avatar
+│   │   ├── data/              # Tactical puzzles & opening book databases
+│   │   ├── pages/             # Landing, Play Arena, Leaderboard, Profile, Puzzles
+│   │   ├── services/          # Axios API client, Socket.IO client, Audio synthesis
+│   │   ├── store/             # Zustand global stores (authStore, gameStore)
+│   │   ├── styles/            # CSS Design System & typography tokens
+│   │   ├── App.tsx            # Protected client routes
+│   │   └── main.tsx           # React entry point
+│   ├── .env.example           # Frontend environment template
+│   ├── Dockerfile             # Multi-stage Nginx static container
+│   ├── index.html             # HTML root shell
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── nginx/
+│   └── nginx.conf             # Reverse proxy routing /api, /socket.io, and /
+├── docker-compose.yml         # Multi-container orchestration
+├── PROJECT_AUDIT.md           # In-depth architectural audit
+├── SIMPLIFICATION_PLAN.md     # Code simplification and refactoring plan
+├── DEPENDENCY_AUDIT.md        # Package-by-package justification
+├── DATABASE.md                # Comprehensive MongoDB schema documentation
+├── AWS_DEPLOYMENT.md          # Step-by-step beginner guide to AWS deployment
+├── VIVA_PREPARATION.md        # Q&A guide for final semester viva exam
+├── PROJECT_REPORT_NOTES.md    # Documentation for university project report
+└── package.json               # Root monorepo workspace scripts
 ```
 
 ---
 
-## 🛠 Tools You Need to Install
+## ⚡ Quick Start (Local Development)
 
-| Tool | Version | Download |
-|------|---------|----------|
-| Node.js | 20 LTS | https://nodejs.org |
-| npm | 10+ | (comes with Node) |
-| Git | any | https://git-scm.com |
-| VS Code | any | https://code.visualstudio.com |
-| Docker *(prod only)* | 25+ | https://docker.com |
-
-**MongoDB Atlas (free cloud DB — no local install needed)**
-1. Go to https://cloud.mongodb.com
-2. Sign up free → Create Organisation → New Project → Create Cluster (M0 Free)
-3. Database Access → Add user (username + password)
-4. Network Access → Add IP → Allow from Anywhere (0.0.0.0/0) for dev
-5. Connect → Drivers → copy the connection string — looks like:
-   `mongodb+srv://youruser:yourpass@cluster0.abc123.mongodb.net/?retryWrites=true&w=majority`
+### 1. Prerequisites
+Ensure you have installed:
+- [Node.js](https://nodejs.org) (v18 or v20 LTS)
+- [npm](https://npmjs.com) (comes with Node.js)
+- [Git](https://git-scm.com)
 
 ---
 
-## ⚡ Quick Start (Development)
+### 2. Clone and Install Dependencies
 
-### 1 — Clone / extract the project
 ```bash
-# If from zip:
-unzip knightos.zip && cd knightos
-```
+# Navigate to project root
+cd ChessKhelo
 
-### 2 — Install all dependencies
-```bash
+# Install dependencies across root, backend, and frontend
 npm run install:all
-# This installs root + backend + frontend packages
 ```
 
-### 3 — Configure backend environment
+---
+
+### 3. Configure Environment Variables
+
+#### A. Backend Environment
 ```bash
 cd backend
 cp .env.example .env
-# Open .env and fill in:
-#   MONGODB_URI=  ← paste your Atlas connection string
-#   JWT_SECRET=   ← any 32+ char random string
-#   JWT_REFRESH_SECRET= ← another 32+ char random string
 ```
-
-### 4 — Configure frontend environment
-```bash
-cd ../frontend
-cp .env.example .env
-# Default values work for local dev — no changes needed
-```
-
-### 5 — Run both servers
-```bash
-cd ..             # back to project root
-npm run dev       # starts backend :5000 + frontend :5173 simultaneously
-```
-
-Open http://localhost:5173 — you're live! 🎉
-
-> **No MongoDB?** Click "Try Demo Account" on the auth page — fully functional offline demo.
-
----
-
-## 🔑 Environment Variables Reference
-
-### backend/.env
+Open `backend/.env` in your editor and configure:
 ```env
-NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/knightos
-JWT_SECRET=at-least-32-random-characters-here
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/chesskhelo?retryWrites=true&w=majority
+JWT_SECRET=any_long_random_string_with_32_or_more_characters_here
 JWT_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=another-32-random-characters-here
+JWT_REFRESH_SECRET=another_long_random_string_for_refresh_tokens_here
 JWT_REFRESH_EXPIRES_IN=30d
 FRONTEND_URL=http://localhost:5173
 ```
 
-### frontend/.env
+> **Note:** If you do not have a MongoDB Atlas account yet, sign up for free at [MongoDB Cloud](https://cloud.mongodb.com) and create an M0 Free cluster in 2 minutes.
+
+#### B. Frontend Environment
+```bash
+cd ../frontend
+cp .env.example .env
+```
+Default values work out of the box for local development:
 ```env
 VITE_API_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
@@ -113,114 +152,96 @@ VITE_SOCKET_URL=http://localhost:5000
 
 ---
 
-## 🚀 Production Deployment
+### 4. Run the Application
 
-### Option A — Vercel (Frontend) + Railway (Backend)
-
-**Backend → Railway**
+Return to the project root directory and start both servers simultaneously:
 ```bash
-# 1. Push to GitHub
-# 2. railway.app → New Project → Deploy from GitHub → select backend/
-# 3. Add env vars in Railway dashboard
-# 4. Railway gives you a URL like: https://knightos-api.up.railway.app
+cd ..
+npm run dev
 ```
 
-**Frontend → Vercel**
-```bash
-cd frontend
-# Set VITE_API_URL=https://knightos-api.up.railway.app/api  in frontend/.env
-# Then:
-npx vercel --prod
-```
+- **Frontend Application:** Open [http://localhost:5173](http://localhost:5173) in your browser.
+- **Backend API:** [http://localhost:5000/api](http://localhost:5000/api)
+- **API Health Check:** [http://localhost:5000/health](http://localhost:5000/health)
 
-### Option B — Docker Compose (Self-hosted VPS)
-```bash
-# Copy project to your VPS, then:
-cp backend/.env.example backend/.env   # fill in vars
-docker-compose up -d --build
-# Nginx listens on port 80/443
-```
+> **Quick Testing Tip:** On the authentication page, click **"♟ Try Demo Account"** to immediately explore the full application without setting up a database!
 
 ---
 
-## 📡 API Endpoints
+## 📡 API Endpoints Reference
 
-```
-POST   /api/auth/register      Register new user → JWT
-POST   /api/auth/login         Login → JWT + refresh token
-POST   /api/auth/refresh       Refresh access token
-GET    /api/auth/me            Get current user (auth required)
-POST   /api/auth/logout        Logout
+### Authentication
+- `POST /api/auth/register` — Register a new account
+- `POST /api/auth/login` — Sign in and receive JWT tokens
+- `POST /api/auth/refresh` — Refresh expired access token
+- `GET /api/auth/me` — Fetch currently authenticated user profile
+- `POST /api/auth/logout` — Set user online status to false
 
-GET    /api/games/:gameId      Get game by ID
-GET    /api/games/user/:userId User's game history
-POST   /api/games/ai           Create AI game
+### Games & Matches
+- `GET /api/games/:gameId` — Retrieve game details and player info
+- `GET /api/games/user/:userId` — Retrieve past game history for a player
+- `POST /api/games/ai` — Create an unranked practice match vs AI
 
-GET    /api/users/search       Search users by username
-GET    /api/users/:username    Public profile
-PATCH  /api/users/me           Update profile (auth required)
+### Users & Leaderboard
+- `GET /api/users/online` — Count active online players
+- `GET /api/users/search?q=name` — Search players by partial handle
+- `GET /api/users/:username` — View public player profile and recent matches
+- `PATCH /api/users/me` — Update avatar icon and country flag
+- `GET /api/leaderboard?tier=Gold` — Get ranked player leaderboard (cached 60s)
 
-GET    /api/leaderboard        Ranked leaderboard (cached 60s)
-
-GET    /health                 Health check
-```
-
-## 🔌 Socket.io Events
-
-```
-Client → Server:
-  matchmaking:join    { timeControl: "600+0" }
-  matchmaking:leave
-  game:join           { gameId }
-  game:move           { gameId, from, to, promotion }
-  game:resign         { gameId }
-  game:offer_draw     { gameId }
-  game:accept_draw    { gameId }
-  game:chat           { gameId, message }
-
-Server → Client:
-  matchmaking:searching   { queueSize }
-  matchmaking:found       { gameId, color, opponent, timeControl }
-  game:state              { game }
-  game:move               { from, to, promotion, playerId }
-  game:end                { result, termination }
-  game:offer_draw         { offeredBy, username }
-  game:chat               { userId, username, message, timestamp }
-```
+### Social & Friends
+- `POST /api/friends/request` — Send friend request
+- `POST /api/friends/respond` — Accept or decline friend request
+- `GET /api/friends` — List accepted friends
+- `GET /api/friends/incoming` — List incoming pending requests
+- `DELETE /api/friends/:friendId` — Remove friend
 
 ---
 
-## 🏆 Rank Tiers
+## 🔌 WebSocket Events Reference
 
-| Tier     | Rating     | Color   |
-|----------|-----------|---------|
-| Bronze   | < 1000    | #CD7F32 |
-| Silver   | 1000–1400 | #C0C0C0 |
-| Gold     | 1400–1800 | #f5c842 |
-| Platinum | 1800–2200 | #a855f7 |
-| Diamond  | 2200+     | #00d4ff |
-
----
-
-## 💡 Tech Stack
-
-**Backend:** Node.js · Express · TypeScript · MongoDB Atlas (Mongoose) · Socket.io · JWT · bcryptjs · Winston logging
-
-**Frontend:** React 18 · TypeScript · Vite · Zustand · Framer Motion · chess.js · Socket.io-client · React Router v6 · React Hot Toast
-
-**DevOps:** Docker · Docker Compose · Nginx · GitHub Actions CI/CD
+| Event Name | Direction | Payload | Description |
+|---|---|---|---|
+| `matchmaking:join` | Client → Server | `{ timeControl: "600+0" }` | Enters player into matchmaking queue |
+| `matchmaking:leave` | Client → Server | `{}` | Removes player from queue |
+| `matchmaking:searching` | Server → Client | `{ queueSize: 2 }` | Queue status notification |
+| `matchmaking:found` | Server → Client | `{ gameId, color, opponent, timeControl }` | Triggers match start for both players |
+| `game:join` | Client → Server | `{ gameId, spectate?: boolean }` | Connects socket to room `game:<gameId>` |
+| `game:move` | Client ⇄ Server | `{ gameId, from, to, promotion }` | Broadcasts validated chess move |
+| `game:resign` | Client → Server | `{ gameId }` | Forfeits game and assigns victory to opponent |
+| `game:offer_draw` | Client ⇄ Server | `{ gameId }` | Sends draw proposal to opponent |
+| `game:accept_draw` | Client → Server | `{ gameId }` | Finalizes match as a draw (`1/2-1/2`) |
+| `game:chat` | Client ⇄ Server | `{ gameId, message }` | In-game text messaging |
+| `game:end` | Server → Client | `{ result, termination }` | Concludes game and updates Elo in database |
 
 ---
 
-## 👨‍💻 Author
+## ☁️ Deployment on AWS
 
-**Chandana B**
-- GitHub: [@ChandanaB-Source](https://github.com/ChandanaB-Source)
+ChessKhelo is designed for straightforward deployment on **Amazon Web Services (AWS)** using standard, cost-effective services:
+- **Frontend:** AWS S3 static website hosting with CloudFront CDN distribution.
+- **Backend:** AWS EC2 (Ubuntu 22.04 LTS / Amazon Linux 2023) running Node.js with PM2 and Nginx.
+- **Database:** MongoDB Atlas M0 Cloud Cluster.
+- **Monitoring:** AWS CloudWatch for server CPU, memory, and application log monitoring.
+
+For complete, step-by-step instructions with exact AWS Console click-by-click screenshots and CLI commands, refer to:  
+👉 **[AWS_DEPLOYMENT.md](file:///d:/KnightOS-main/AWS_DEPLOYMENT.md)**
 
 ---
 
-## 📄 License
+## 🎓 Viva & Academic Report Resources
 
-This project is licensed under the MIT License.
+For university viva presentations and project report preparation:
+- 📖 **[DATABASE.md](file:///d:/KnightOS-main/DATABASE.md):** Complete database schema and relationships.
+- 🎓 **[VIVA_PREPARATION.md](file:///d:/KnightOS-main/VIVA_PREPARATION.md):** 30+ viva examination questions with concise, technically sound answers.
+- 📝 **[PROJECT_REPORT_NOTES.md](file:///d:/KnightOS-main/PROJECT_REPORT_NOTES.md):** Pre-written academic report content (Abstract, Problem Statement, System Architecture, Testing, and Future Scope).
 
-MIT License — free to use, modify and distribute with attribution.
+---
+
+## 📄 License & Attribution
+
+This project is licensed under the **MIT License**.
+
+- **Project Name:** ChessKhelo
+- **Derived / Adapted From:** KnightOS (Original Author: Chandana B — `@ChandanaB-Source`)
+- **License Terms:** Free for educational, commercial, and personal use with attribution.

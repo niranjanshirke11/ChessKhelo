@@ -55,7 +55,7 @@ export const googleAuth = async (req: Request, res: Response, next: NextFunction
       const token = signAccess(user._id.toString(), user.email);
       const refreshToken = signRefresh(user._id.toString());
       logger.info(`New Google user: ${username} (${email})`);
-      res.status(201).json({ success: true, message: `Welcome to KnightOS, ${username}! 🎉`, data: { token, refreshToken, user: safeUser(user) } });
+      res.status(201).json({ success: true, message: `Welcome to ChessKhelo, ${username}! 🎉`, data: { token, refreshToken, user: safeUser(user) } });
     }
   } catch (err) {
     next(err);
