@@ -1,0 +1,104 @@
+.page   { min-height: calc(100vh - 57px); padding: 28px 20px; display: flex; justify-content: center; }
+.layout { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 22px; }
+
+.header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+.title  { font-family: var(--font-d); font-size: 2.4rem; letter-spacing: 2px; }
+.sub    { color: var(--muted); font-size: .82rem; margin-top: 2px; }
+.tabs   { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge  { background: var(--red); color: #fff; border-radius: 10px; font-size: .6rem; padding: 1px 6px; margin-left: 4px; font-weight: 800; }
+
+.content { display: flex; flex-direction: column; gap: 14px; }
+
+/* Friends grid */
+.friendGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.friendCard { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.fcTop      { display: flex; gap: 14px; align-items: center; }
+.fcAvatar   { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; position: relative; }
+.onlineDot  { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--card); }
+.online     { background: var(--green); }
+.offline    { background: var(--muted); }
+.onlineText  { color: var(--green); font-size: .72rem; font-weight: 700; }
+.offlineText { color: var(--muted); font-size: .72rem; }
+.fcInfo     { flex: 1; min-width: 0; }
+.fcName     { font-weight: 700; font-size: .95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fcRating   { font-family: var(--font-m); font-size: .72rem; margin: 2px 0; }
+.fcStatus   { font-size: .72rem; }
+.fcStats    { display: flex; gap: 14px; font-family: var(--font-m); font-size: .75rem; padding: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.fcActions  { display: flex; gap: 8px; }
+
+/* Requests */
+.requestList { display: flex; flex-direction: column; gap: 10px; }
+.requestCard { padding: 16px 20px; display: flex; align-items: center; gap: 14px; }
+.reqAvatar   { width: 42px; height: 42px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+.reqInfo     { flex: 1; }
+.reqName     { font-weight: 700; }
+.reqRating   { font-family: var(--font-m); font-size: .72rem; color: var(--muted); }
+.reqActions  { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* Search */
+.searchBar     { display: flex; gap: 10px; }
+.searchBar .input { flex: 1; }
+.searchResults { display: flex; flex-direction: column; gap: 8px; }
+.searchCard    { padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
+.scAvatar      { width: 38px; height: 38px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.scInfo        { flex: 1; }
+.scName        { font-weight: 700; font-size: .88rem; }
+.scRating      { font-family: var(--font-m); font-size: .7rem; }
+
+/* Empty */
+.empty { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 60px 20px; text-align: center; color: var(--muted); }
+
+/* Challenge toast */
+.challengeToast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  background: var(--card); border: 1px solid var(--gold); border-radius: 14px;
+  padding: 12px 24px; font-size: .88rem; z-index: 200;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(245,200,66,.2);
+}
+.tcRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; padding: 10px 14px; background: var(--surface); border-radius: 10px; border: 1px solid var(--border); }
+
+/* ── Challenge Notification Modal ─────────────────────── */
+.challengeOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; backdrop-filter: blur(6px);
+}
+.challengeModal {
+  background: var(--card); border: 2px solid var(--gold);
+  border-radius: 20px; padding: 36px 40px; max-width: 420px; width: 90%;
+  text-align: center; box-shadow: 0 0 60px rgba(245,200,66,.25);
+}
+.challengeAvatar {
+  font-size: 3.5rem; margin-bottom: 12px;
+}
+.challengeFrom {
+  font-family: var(--font-d); font-size: 1.4rem; color: var(--gold);
+  letter-spacing: 2px; margin-bottom: 4px;
+}
+.challengeRating {
+  color: var(--muted); font-size: .85rem; margin-bottom: 16px;
+}
+.challengeTC {
+  display: inline-block; background: rgba(245,200,66,.1);
+  border: 1px solid var(--gold); border-radius: 8px;
+  padding: 6px 18px; color: var(--gold); font-size: 1rem;
+  font-weight: 700; margin-bottom: 28px;
+}
+.challengeActions {
+  display: flex; gap: 12px; justify-content: center;
+}
+.challengeTimer {
+  font-size: .75rem; color: var(--muted); margin-top: 16px;
+}
+
+@media(max-width: 600px) {
+  .page { padding: 16px 12px; }
+  .title { font-size: 1.8rem; }
+  .friendGrid { grid-template-columns: 1fr; }
+  .fcActions { flex-wrap: wrap; }
+  .requestCard { flex-wrap: wrap; }
+  .reqActions { width: 100%; justify-content: flex-end; }
+  .challengeModal { padding: 24px 20px; }
+  .challengeActions { flex-direction: column; }
+  .tabs { flex-wrap: wrap; }
+}

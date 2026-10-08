@@ -1,0 +1,107 @@
+.page { min-height: calc(100vh - 57px); padding: 24px 20px; display: flex; justify-content: center; }
+
+/* Loading */
+.loadingCard { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 60px 40px; text-align: center; }
+.loadingIcon { font-size: 4rem; animation: spin 3s linear infinite; }
+.loadingTitle { font-family: var(--font-d); font-size: 2rem; letter-spacing: 2px; }
+.loadingSub   { color: var(--muted); font-size: .88rem; }
+.progressBar  { width: 320px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.progressFill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--cyan)); border-radius: 3px; }
+.progressLabel { font-family: var(--font-m); font-size: .72rem; color: var(--muted); }
+
+/* Error */
+.errorCard { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 60px 40px; text-align: center; }
+
+/* Main layout */
+.layout { width: 100%; max-width: 1300px; display: flex; gap: 20px; align-items: flex-start; }
+
+/* Left col */
+.leftCol { width: clamp(180px, 20vw, 240px); flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; }
+.sectionTitle { font-family: var(--font-d); font-size: 1.1rem; letter-spacing: 1.5px; margin-bottom: 12px; color: var(--muted); }
+
+.accuracyCard { padding: 20px; }
+.accuracyRow  { display: flex; align-items: center; gap: 0; }
+.accBlock     { flex: 1; text-align: center; }
+.accPct       { font-family: var(--font-d); font-size: 2.4rem; letter-spacing: 1px; }
+.accLabel     { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+.accDivider   { width: 1px; height: 50px; background: var(--border); }
+
+.chartCard { padding: 20px; }
+.chartWrap { position: relative; }
+.chart     { width: 100%; height: 80px; display: block; border-radius: 6px; overflow: hidden; background: var(--surface); }
+.chartLabels { display: flex; justify-content: space-between; font-family: var(--font-m); font-size: .6rem; color: var(--dim); margin-top: 4px; }
+
+.classCard  { padding: 20px; }
+.classTable { display: flex; flex-direction: column; gap: 4px; }
+.classHeader { display: grid; grid-template-columns: 1fr 32px 32px; gap: 4px; padding: 0 4px; }
+.classRow   { display: grid; grid-template-columns: 1fr 32px 32px; gap: 4px; align-items: center; padding: 5px 4px; border-radius: 6px; }
+.classRow:hover { background: var(--surface); }
+.classCount { font-family: var(--font-m); font-size: .82rem; text-align: center; font-weight: 700; }
+
+/* Center col */
+.centerCol { flex: 0 0 auto; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+
+/* Mini board */
+.miniBoard { display: flex; flex-direction: column; border: 2px solid var(--border); border-radius: 4px; overflow: hidden; }
+.mRow      { display: flex; }
+.mSq       { width: clamp(34px, 4vw, 56px); height: clamp(34px, 4vw, 56px); display: flex; align-items: center; justify-content: center; }
+.mLight    { background: var(--sq-light); }
+.mDark     { background: var(--sq-dark); }
+.mLast     { background: rgba(245,200,66,.4) !important; }
+.mHL       { background: rgba(0,212,255,.3) !important; outline: 2px solid var(--cyan); outline-offset: -2px; }
+.mPiece    { font-size: 2rem; line-height: 1; pointer-events: none; }
+.mWp       { color: #f5f0e8; filter: drop-shadow(0 1px 3px rgba(0,0,0,.9)); }
+.mBp       { color: #1a1a2e; filter: drop-shadow(0 1px 2px rgba(255,255,255,.15)); }
+
+.boardPlaceholder { width: min(448px, 80vw); height: min(448px, 80vw); border: 2px dashed var(--border); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+
+/* Move detail */
+.moveDetail { padding: 16px; width: 100%; }
+.moveDetailTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.moveDetailNum  { font-family: var(--font-m); font-size: .88rem; font-weight: 700; }
+.moveDetailClass { font-size: .82rem; font-weight: 800; }
+.moveDetailStats { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+.moveDetailStats > div { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border-right: 1px solid var(--border); }
+.moveDetailStats > div:last-child { border-right: none; }
+.detailLabel { font-size: .62rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.detailVal   { font-family: var(--font-m); font-size: .88rem; font-weight: 700; margin-top: 2px; }
+.bestMove    { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; background: rgba(0,212,255,.06); border: 1px solid rgba(0,212,255,.2); border-radius: 8px; }
+
+/* Right col */
+.rightCol { flex: 1; min-width: 200px; }
+
+.moveListCard   { padding: 20px; }
+.moveListScroll { max-height: 600px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.moveListRow    { display: flex; gap: 4px; align-items: center; }
+.mlNum     { font-family: var(--font-m); font-size: .72rem; color: var(--dim); width: 28px; flex-shrink: 0; text-align: right; }
+.mlMove    {
+  flex: 1; text-align: left; padding: 5px 8px; border-radius: 6px;
+  font-family: var(--font-m); font-size: .82rem;
+  background: transparent; border: none; border-left: 3px solid transparent;
+  color: var(--text); cursor: pointer; transition: background .15s;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.mlMove:hover  { background: var(--surface); }
+.mlSelected    { background: var(--card2) !important; }
+.mlIcon        { font-family: var(--font-m); font-size: .7rem; font-weight: 900; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media(max-width: 900px) {
+  .layout { flex-direction: column; align-items: center; }
+  .leftCol { width: 100%; max-width: 560px; }
+  .mSq { width: 40px; height: 40px; }
+  .mPiece { font-size: 1.5rem; }
+  .boardPlaceholder { width: 320px; height: 320px; }
+}
+
+@media(max-width: 600px) {
+  .page { padding: 14px 10px; }
+  .mSq { width: 34px; height: 34px; }
+  .mPiece { font-size: 1.2rem; }
+  .boardPlaceholder { width: 272px; height: 272px; }
+  .accuracyRow { flex-direction: column; gap: 12px; }
+  .accDivider { display: none; }
+  .moveDetailStats { flex-wrap: wrap; }
+  .moveDetailStats > div { min-width: 45%; }
+}

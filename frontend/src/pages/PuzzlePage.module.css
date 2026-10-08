@@ -1,0 +1,161 @@
+/* ── Page ── */
+.page { min-height: calc(100vh - 57px); padding: 28px 20px; display: flex; justify-content: center; }
+
+/* ── Idle layout ── */
+.idleLayout { width: 100%; max-width: 1100px; display: flex; flex-direction: column; gap: 28px; }
+
+.idleHeader { text-align: center; }
+.puzzleIcon { font-size: 3.5rem; margin-bottom: 10px; }
+.idleTitle  { font-family: var(--font-d); font-size: 3rem; letter-spacing: 3px; margin-bottom: 8px; }
+.idleSub    { color: var(--muted); font-size: .9rem; }
+
+/* Stats row */
+.statsRow { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.statBox  { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 28px; text-align: center; min-width: 110px; }
+.statVal  { font-family: var(--font-d); font-size: 2rem; letter-spacing: 1px; }
+.statLbl  { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+/* Daily card */
+.dailyCard {
+  display: flex; align-items: center; gap: 20px; padding: 24px 28px;
+  border-color: rgba(245,200,66,.3) !important;
+  background: linear-gradient(135deg, var(--card), rgba(245,200,66,.04)) !important;
+}
+.dailyBadge { font-family: var(--font-d); letter-spacing: 2px; font-size: .75rem; color: var(--gold); flex-shrink: 0; }
+.dailyInfo  { flex: 1; }
+.dailyTitle { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+.dailyMeta  { display: flex; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); }
+.dot2       { color: var(--dim); }
+
+/* Browse section */
+.browseSection { display: flex; flex-direction: column; gap: 16px; }
+.browseHeader  { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.browseTitle   { font-family: var(--font-d); font-size: 1.6rem; letter-spacing: 2px; }
+.filterRow     { display: flex; gap: 8px; }
+
+/* Puzzle grid */
+.puzzleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.puzzleCard { padding: 16px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+.pcTop      { display: flex; align-items: center; justify-content: space-between; }
+.pcTheme    { font-size: .72rem; color: var(--muted); }
+.pcRating   { font-size: .72rem; }
+.pcTitle    { font-weight: 700; font-size: .88rem; }
+.pcDiff     { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; }
+
+/* ── Game layout ── */
+.gameLayout {
+  width: 100%; max-width: 1200px;
+  display: flex; gap: 20px; align-items: flex-start;
+}
+
+/* Left col */
+.leftCol { width: clamp(160px, 18vw, 220px); flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+
+.infoCard { padding: 18px; }
+.infoTop  { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.infoTheme { font-size: .72rem; color: var(--muted); margin-bottom: 3px; }
+.infoTitle { font-weight: 700; font-size: .95rem; }
+.infoDiff  { font-size: .7rem; font-weight: 800; letter-spacing: 1px; flex-shrink: 0; }
+.infoRating { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+.infoInstruct { font-size: .8rem; color: var(--muted); }
+
+.myStats    { padding: 14px; }
+.myStatsRow { display: flex; gap: 8px; margin-bottom: 8px; }
+.myStatsRow:last-child { margin-bottom: 0; }
+.myStat     { flex: 1; background: var(--surface); border-radius: 8px; padding: 10px 8px; text-align: center; }
+.myStatVal  { display: block; font-family: var(--font-d); font-size: 1.4rem; }
+.myStatLbl  { font-size: .62rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+.hintBtn { width: 100%; justify-content: center; }
+
+/* Center col */
+.centerCol { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+/* Board */
+.boardWrap { position: relative; }
+.board { display: flex; flex-direction: column; border: 2px solid var(--border); border-radius: 4px; overflow: hidden; user-select: none; }
+.boardRow { display: flex; }
+
+.rankLabel { width: 18px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-m); font-size: .55rem; color: var(--muted); background: var(--surface); }
+.fileLabels { display: flex; }
+.fileLabel  { width: clamp(44px, 6vw, 70px); text-align: center; font-family: var(--font-m); font-size: .55rem; color: var(--muted); padding: 3px 0; background: var(--surface); }
+.fileLabels > span:first-child { width: 18px; background: var(--surface); }
+
+.sq         { width: clamp(44px, 6vw, 70px); height: clamp(44px, 6vw, 70px); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: filter .1s; }
+.sq:hover   { filter: brightness(1.15); }
+.sqLight    { background: var(--sq-light); }
+.sqDark     { background: var(--sq-dark); }
+.sqSelected { outline: 3px solid var(--gold); outline-offset: -3px; }
+.sqLast     { background: rgba(245,200,66,.35) !important; }
+.sqValid    { cursor: pointer; }
+
+.dot        { width: 22px; height: 22px; border-radius: 50%; background: rgba(0,0,0,.25); pointer-events: none; }
+.captureDot { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 4px rgba(0,0,0,.25); pointer-events: none; }
+
+.piece  { font-size: 2.4rem; line-height: 1; pointer-events: none; z-index: 1; }
+.wp     { color: #f5f0e8; filter: drop-shadow(0 1px 3px rgba(0,0,0,.9)); }
+.bp     { color: #1a1a2e; filter: drop-shadow(0 1px 2px rgba(255,255,255,.15)); }
+
+/* Hint overlay */
+.hintOverlay { position: absolute; inset: 0 0 21px 18px; pointer-events: none; }
+.hintPulse   {
+  position: absolute; width: clamp(44px, 6vw, 70px); height: clamp(44px, 6vw, 70px);
+  background: rgba(0,212,255,.25);
+  border: 3px solid var(--cyan);
+  animation: hintPulse 1s ease-in-out infinite;
+}
+@keyframes hintPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.9)} }
+
+/* Move dots */
+.moveDots      { display: flex; gap: 8px; justify-content: center; }
+.moveDot       { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: all .3s; }
+.moveDotActive { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.moveDotDone   { background: var(--green); }
+
+/* Right col */
+.rightCol { flex: 1; min-width: 200px; }
+
+/* Result cards */
+.resultCard { padding: 28px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.correct    { border-color: rgba(0,255,136,.3) !important; background: linear-gradient(135deg, var(--card), rgba(0,255,136,.04)) !important; }
+.failed     { border-color: rgba(255,68,102,.3) !important; background: linear-gradient(135deg, var(--card), rgba(255,68,102,.04)) !important; }
+.resultEmoji { font-size: 3rem; }
+.resultTitle { font-family: var(--font-d); font-size: 2rem; letter-spacing: 2px; }
+.resultSub   { font-family: var(--font-m); font-size: .78rem; color: var(--muted); }
+.streakBadge { background: rgba(245,200,66,.12); border: 1px solid rgba(245,200,66,.3); color: var(--gold); padding: 4px 14px; border-radius: 20px; font-size: .82rem; font-weight: 700; }
+.resultBtns  { display: flex; flex-direction: column; gap: 8px; width: 100%; align-items: center; margin-top: 4px; }
+
+/* Tips card */
+.tipsCard   { padding: 18px; }
+.tipsList   { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.tip        { font-size: .82rem; color: var(--muted); padding: 8px 10px; background: var(--surface); border-radius: 8px; }
+
+/* Difficulty breakdown */
+.diffBreakdown { padding-top: 4px; }
+.diffRow       { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.diffBar       { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.diffFill      { height: 100%; border-radius: 3px; transition: width .6s ease; }
+
+@media(max-width: 900px) {
+  .gameLayout { flex-direction: column; align-items: center; }
+  .leftCol { width: 100%; max-width: 560px; flex-direction: row; flex-wrap: wrap; }
+  .leftCol > * { flex: 1; min-width: 180px; }
+  .sq { width: 44px; height: 44px; }
+  .fileLabel { width: 44px; }
+  .piece { font-size: 1.6rem; }
+}
+
+@media(max-width: 600px) {
+  .page { padding: 16px 10px; }
+  .idleTitle { font-size: 2rem; }
+  .statsRow { gap: 10px; }
+  .statBox { padding: 14px 16px; min-width: 80px; }
+  .dailyCard { flex-direction: column; gap: 12px; }
+  .puzzleGrid { grid-template-columns: repeat(2, 1fr); }
+  .leftCol { flex-direction: column; }
+  .resultTitle { font-size: 1.5rem; }
+}

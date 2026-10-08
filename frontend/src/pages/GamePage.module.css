@@ -1,0 +1,286 @@
+.page { min-height: calc(100vh - 57px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+/* Lobby */
+.lobby { display: flex; gap: 24px; align-items: flex-start; width: 100%; max-width: 1000px; }
+.lobbyCard { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
+.lobbyTitle { font-family: var(--font-d); font-size: 2.2rem; letter-spacing: 2px; margin-bottom: 6px; }
+.lobbySub   { color: var(--muted); font-size: .85rem; margin-bottom: 28px; }
+.tcGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
+.tcCard {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 18px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; transition: all .2s;
+}
+.tcCard:hover { border-color: var(--border2); background: var(--card2); }
+.tcSel { border-color: var(--gold) !important; background: rgba(245,200,66,.08) !important; box-shadow: 0 0 0 1px var(--gold); }
+.tcIcon  { font-size: 1.6rem; }
+.tcLabel { font-weight: 700; font-size: .9rem; }
+.tcTime  { font-family: var(--font-m); font-size: .75rem; color: var(--muted); }
+.playBtn { width: 100%; justify-content: center; margin-bottom: 16px; }
+.orBar { display: flex; align-items: center; gap: 12px; font-size: .75rem; color: var(--dim); margin-bottom: 16px; }
+.orBar::before, .orBar::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Stats card */
+.statsCard { width: clamp(200px, 22vw, 260px); flex-shrink: 0; }
+.statsBody { padding: 20px; }
+.ratingDisplay { text-align: center; margin-bottom: 20px; }
+.ratingNum { font-family: var(--font-d); font-size: 2.8rem; letter-spacing: 2px; }
+.ratingLabel { font-size: .65rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.statGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.miniStat { display: flex; flex-direction: column; align-items: center; background: var(--surface); border-radius: 8px; padding: 10px 6px; }
+.miniStat strong { font-family: var(--font-d); font-size: 1.4rem; }
+.miniStat span   { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+/* Searching */
+.searchingCard { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 60px 40px; }
+.searchRing  { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--border); position: relative; display: flex; align-items: center; justify-content: center; }
+.searchPulse {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--gold); animation: spin 2s linear infinite;
+  border-top-color: transparent;
+}
+.searchInner { font-size: 2.5rem; animation: pulse 1.5s ease-in-out infinite; }
+.searchTitle { font-family: var(--font-d); font-size: 2rem; letter-spacing: 2px; }
+.searchSub   { color: var(--muted); font-size: .88rem; }
+
+/* Game layout */
+.gameLayout { display: flex; gap: 16px; align-items: stretch; width: 100%; max-width: 1400px; }
+
+/* Eval bar */
+.evalBar {
+  width: 18px; flex-shrink: 0; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden; height: min(548px, 80vh); display: flex; flex-direction: column; position: relative;
+}
+.evalFill { width: 100%; background: var(--text); transition: height .4s ease; position: absolute; top: 0; }
+.evalText { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-family: var(--font-m); font-size: .55rem; color: var(--muted); white-space: nowrap; }
+
+/* Center column */
+.centerCol { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.playerBar { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+.playerInfo { display: flex; align-items: center; gap: 10px; }
+.playerAv { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.playerName { font-size: .88rem; font-weight: 600; }
+.playerElo  { font-family: var(--font-m); font-size: .68rem; color: var(--muted); }
+.clock {
+  font-family: var(--font-m); font-size: 1.6rem; font-weight: 700;
+  padding: 8px 16px; border-radius: 8px; background: var(--card); border: 1px solid var(--border);
+  transition: all .3s;
+}
+.clockActive { background: var(--gold) !important; color: #000 !important; border-color: var(--gold) !important; box-shadow: 0 0 20px rgba(245,200,66,.3); }
+.controls { display: flex; gap: 8px; justify-content: center; }
+
+/* Right column — moves + chat SIDE BY SIDE filling all remaining space */
+.rightCol {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-self: stretch;
+}
+
+.movePanel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+.moveList  { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 2px; }
+.moveRow   { display: flex; gap: 4px; align-items: center; font-size: .82rem; padding: 2px 4px; border-radius: 4px; }
+.moveRow:hover { background: var(--surface); }
+.moveNum   { color: var(--muted); font-family: var(--font-m); width: 22px; flex-shrink: 0; font-size: .75rem; }
+.moveSan   { flex: 1; font-family: var(--font-m); padding: 2px 6px; border-radius: 4px; cursor: pointer; }
+.moveSan:hover { background: var(--card2); }
+
+.chatPanel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+.chatMessages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.chatEmpty { color: var(--dim); font-size: .78rem; text-align: center; padding: 20px 0; }
+.chatMsg   { display: flex; flex-direction: column; gap: 2px; }
+.chatUser  { font-size: .68rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.chatText  { font-size: .82rem; background: var(--surface); padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); word-break: break-word; }
+.mine .chatText { background: rgba(245,200,66,.08); border-color: rgba(245,200,66,.2); }
+.chatInput { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.chatInput .input { flex: 1; min-width: 0; }
+
+/* Game over overlay */
+.overlay {
+  position: fixed; inset: 0; background: rgba(5,6,13,.85);
+  backdrop-filter: blur(8px); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+.resultCard {
+  background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+  padding: 48px 52px; text-align: center; display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+  box-shadow: 0 32px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(245,200,66,.08);
+}
+.resultEmoji { font-size: 4rem; }
+.resultTitle { font-family: var(--font-d); font-size: 3rem; letter-spacing: 3px; }
+.resultSub   { color: var(--muted); font-size: .88rem; text-transform: capitalize; }
+.eloChange   { font-family: var(--font-d); font-size: 2rem; letter-spacing: 2px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+@media(max-width:900px) {
+  .gameLayout { flex-direction: column; align-items: center; }
+  .evalBar { display: none !important; }
+  .rightCol { width: min(548px, 88vw); flex-direction: row; height: 260px; }
+  .movePanel, .chatPanel { flex: 1; }
+}
+
+/* AI difficulty section */
+.aiSection  { display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--border); padding-top: 20px; }
+.aiHeader   { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: .9rem; }
+.sfLoading  { font-size: .72rem; color: var(--muted); font-family: var(--font-m); }
+.sfReady    { font-size: .72rem; color: var(--green); font-family: var(--font-m); }
+
+.diffGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.diffCard {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 10px 6px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; transition: all .18s;
+}
+.diffCard:hover { border-color: var(--border2); background: var(--card2); }
+.diffSel  { border-color: var(--gold) !important; }
+.diffLevel { font-family: var(--font-d); font-size: 1.3rem; }
+.diffLabel { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.diffElo   { font-family: var(--font-m); font-size: .6rem; color: var(--muted); }
+
+/* Eval bar - two-tone */
+.evalBar {
+  width: 18px; flex-shrink: 0;
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  align-self: stretch; display: flex; flex-direction: column; position: relative;
+  min-height: 200px;
+  height: 100%;
+}
+.evalWhite { background: #f0ede6; transition: height .5s ease; width: 100%; }
+.evalBlack { background: #1a1a2e; transition: height .5s ease; width: 100%; }
+.evalLabel {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-m); font-size: .48rem; color: var(--muted);
+  white-space: nowrap; writing-mode: vertical-rl; padding: 4px 0;
+}
+
+@media(max-width: 900px) {
+  .evalBar { display: none !important; }
+}
+
+/* Result buttons */
+.resultBtns { display: flex; flex-direction: column; gap: 10px; width: 100%; align-items: center; }
+
+/* ── NEW FEATURE CSS ─────────────────────────────────────── */
+
+/* Lobby tabs */
+.lobbyTabs    { display:flex; gap:0; margin-bottom:20px; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.lobbyTab     { flex:1; padding:10px; background:transparent; border:none; color:var(--muted); font-family:var(--font-b); font-size:.85rem; font-weight:600; cursor:pointer; transition:all .18s; }
+.lobbyTab:hover { background:var(--surface); color:var(--text); }
+.lobbyTabActive { background:var(--card2); color:var(--gold); }
+
+/* Opening badge */
+.openingBadge {
+  background: rgba(168,85,247,.12); border: 1px solid rgba(168,85,247,.3);
+  color: #c084fc; padding: 5px 14px; border-radius: 20px;
+  font-size: .75rem; font-weight: 600; letter-spacing: .5px;
+  text-align: center; margin-bottom: 4px;
+}
+
+/* Floating emoji reactions */
+.reactionsFloat { position:relative; height:0; overflow:visible; z-index:10; }
+.reactionBubble {
+  position:absolute; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  pointer-events:none;
+}
+.reactionEmoji { font-size:2rem; filter:drop-shadow(0 2px 8px rgba(0,0,0,.5)); }
+.reactionUser  { font-size:.6rem; color:var(--muted); white-space:nowrap; }
+
+/* Reaction picker */
+.reactionWrap   { position:relative; }
+.reactionPicker {
+  position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+  background:var(--card); border:1px solid var(--border2); border-radius:14px;
+  padding:8px; display:flex; flex-wrap:wrap; gap:4px; width:180px;
+  box-shadow:var(--shadow-lg); z-index:50;
+}
+.reactionBtn { background:transparent; border:none; font-size:1.4rem; cursor:pointer; padding:4px 6px; border-radius:8px; transition:background .15s; }
+.reactionBtn:hover { background:var(--surface); }
+
+/* Spectator badge */
+.spectatorBadge { text-align:center; font-size:.72rem; color:var(--muted); margin-top:-4px; font-family:var(--font-m); }
+
+/* Sound toggle in stats card */
+.soundToggle { display:flex; align-items:center; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+
+/* Spectate list */
+.spectateList { display:flex; flex-direction:column; gap:12px; }
+.noGames      { text-align:center; padding:40px 20px; color:var(--muted); font-size:.88rem; line-height:1.8; }
+.liveGameRow  { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:10px; cursor:pointer; transition:all .18s; }
+.liveGameRow:hover { border-color:var(--gold); background:var(--card2); }
+.lgPlayers    { flex:1; display:flex; gap:8px; align-items:center; font-size:.82rem; font-weight:600; flex-wrap:wrap; }
+.lgVs         { color:var(--muted); font-size:.7rem; }
+.lgMeta       { display:flex; gap:8px; font-size:.7rem; color:var(--muted); font-family:var(--font-m); }
+
+/* Rematch */
+.rematchOffer   { background:rgba(245,200,66,.08); border:1px solid rgba(245,200,66,.3); border-radius:12px; padding:14px 20px; text-align:center; display:flex; flex-direction:column; gap:10px; }
+.rematchOffer p { font-weight:700; color:var(--gold); }
+.rematchWaiting { color:var(--muted); font-size:.82rem; font-family:var(--font-m); animation:pulse 1.5s ease infinite; }
+.rematchDeclined{ color:var(--red); font-size:.82rem; }
+
+/* Chat system messages */
+.system .chatText { color:var(--cyan); font-style:italic; font-size:.78rem; }
+
+/* Result buttons */
+.resultBtns { display:flex; flex-direction:column; gap:10px; width:100%; align-items:center; margin-top:4px; }
+
+/* Missing from evalBar */
+.evalLabel { position:absolute; left:50%; transform:translateX(-50%); bottom:4px; font-family:var(--font-m); font-size:.45rem; color:var(--muted); white-space:nowrap; writing-mode:vertical-rl; }
+
+/* ── Spectator ─────────────────────────────────────────── */
+.spectatorBanner {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,212,255,0.06);
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 8px; padding: 7px 14px;
+  color: var(--cyan); font-size: .8rem; font-weight: 600;
+  margin: 6px 0;
+}
+.spectatorCount {
+  color: rgba(0,212,255,0.6); font-weight: 400; font-size: .75rem;
+}
+.spectatorLeave {
+  margin-left: auto;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cyan); border-radius: 6px;
+  padding: 3px 12px; cursor: pointer;
+  font-size: .75rem; transition: all .18s;
+}
+.spectatorLeave:hover {
+  background: rgba(0,212,255,0.15);
+  border-color: var(--cyan);
+}
+
+@media(max-width: 600px) {
+  .page { padding: 10px 8px; }
+  .lobby { flex-direction: column; }
+  .statsCard { width: 100%; }
+  .tcGrid { grid-template-columns: repeat(2, 1fr); }
+  .diffGrid { grid-template-columns: repeat(2, 1fr); }
+  .resultCard { padding: 28px 20px; }
+  .resultTitle { font-size: 2rem; }
+  .clock { font-size: 1.2rem; padding: 6px 10px; }
+  .rightCol { flex-direction: row !important; height: clamp(160px, 25vh, 220px) !important; width: 100%; }
+  .movePanel, .chatPanel { flex: 1; height: 100%; }
+  .lobbyCard { padding: 20px 16px; }
+}

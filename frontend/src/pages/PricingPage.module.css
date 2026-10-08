@@ -1,0 +1,56 @@
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 2vw, 20px); margin-bottom: 24px; padding-top: 20px; }
+
+.planCard { padding: clamp(20px, 3vw, 32px); position: relative; transition: border-color .2s; }
+.popular  { box-shadow: 0 0 0 1px rgba(245,200,66,.4), 0 0 40px rgba(245,200,66,.07); }
+.popularTag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), var(--gold2)); color: #000;
+  font-size: .72rem; font-weight: 800; padding: 4px 16px; border-radius: 20px;
+  white-space: nowrap; margin-bottom: 16px; align-self: flex-start;
+}
+
+.planIcon { font-size: clamp(1.8rem, 3vw, 2.4rem); margin-bottom: 10px; }
+.planName { font-family: var(--font-d); font-size: clamp(1.2rem, 2vw, 1.5rem); letter-spacing: 2px; margin-bottom: 14px; }
+.planPrice { display: flex; align-items: baseline; gap: 4px; margin-bottom: 24px; }
+.amount { font-family: var(--font-d); font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 1px; }
+.period { font-size: .85rem; color: var(--muted); }
+
+.featureList { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; flex: 1; }
+.feature { display: flex; align-items: flex-start; gap: 9px; font-size: clamp(.78rem, 1.2vw, .85rem); line-height: 1.4; }
+.check   { font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+.planCta { width: 100%; justify-content: center; }
+
+/* FAQ */
+.faqCard { margin-bottom: 20px; }
+.faqGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.faqItem { padding: clamp(14px, 2vw, 20px) clamp(16px, 2.5vw, 24px); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.faqItem:nth-child(2n) { border-right: none; }
+.faqItem:nth-last-child(-n+2) { border-bottom: none; }
+.faqQ { font-size: clamp(.8rem, 1.2vw, .88rem); font-weight: 700; margin-bottom: 6px; }
+.faqA { font-size: clamp(.74rem, 1.1vw, .8rem); color: var(--muted); line-height: 1.6; }
+
+/* Investor strip */
+.investorStrip { padding: clamp(16px, 2vw, 24px) clamp(18px, 2.5vw, 28px); display: flex; align-items: center; gap: clamp(16px, 3vw, 32px); flex-wrap: wrap; }
+.investorLabel { font-size: .72rem; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+.investorStats { display: flex; gap: clamp(16px, 3vw, 32px); flex-wrap: wrap; flex: 1; }
+.invStat  { display: flex; flex-direction: column; align-items: center; }
+.invVal   { font-family: var(--font-d); font-size: clamp(1.4rem, 2.5vw, 1.8rem); color: var(--gold); letter-spacing: 1px; }
+.invLabel { font-size: .68rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.invDelta { font-size: .7rem; color: var(--green); font-family: var(--font-m); }
+
+@media(max-width:900px) {
+  .cards { grid-template-columns: 1fr; }
+  .faqGrid { grid-template-columns: 1fr; }
+  .faqItem:nth-child(2n) { border-right: none; }
+}
+
+@media(max-width: 600px) {
+  .cards { grid-template-columns: 1fr; gap: 14px; }
+  .planCard { padding: 20px 16px; }
+  .amount { font-size: 2rem; }
+  .investorStrip { flex-direction: column; gap: 16px; }
+  .investorStats { gap: 16px; justify-content: center; }
+  .faqGrid { grid-template-columns: 1fr; }
+  .faqItem { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+  .faqItem:last-child { border-bottom: none !important; }
+}
