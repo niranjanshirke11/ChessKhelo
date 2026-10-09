@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, refreshToken, getMe, logout, registerValidators, loginValidators } from '../controllers/authController';
+import { register, guestLogin, login, refreshToken, getMe, logout, registerValidators, loginValidators } from '../controllers/authController';
 import { googleAuth } from '../controllers/googleAuthController';
 import { getGame, getUserGames, createAiGame } from '../controllers/gameController';
 import { getUserProfile, updateProfile, searchUsers, getOnlineCount, getLeaderboard } from '../controllers/userController';
@@ -8,6 +8,7 @@ import { authenticate, optionalAuth } from '../middleware/auth';
 
 export const authRouter = Router();
 authRouter.post('/register', registerValidators, register);
+authRouter.post('/guest', guestLogin);
 authRouter.post('/login', loginValidators, login);
 authRouter.post('/refresh', refreshToken);
 authRouter.get('/me', authenticate, getMe);
