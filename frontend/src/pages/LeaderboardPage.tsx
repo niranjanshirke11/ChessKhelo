@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import Avatar from '../components/Avatar';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import s from './LeaderboardPage.module.css';
 
@@ -22,15 +21,14 @@ const DEMO_PLAYERS = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 export default function LeaderboardPage() {
-  const nav = useNavigate();
   const [tier, setTier] = useState('all');
   const [players, setPlayers] = useState<any[]>(DEMO_PLAYERS);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    api.get(`/leaderboard?tier=${tier}`)
-      .then(r => { if (r.data?.data?.players?.length) setPlayers(r.data.data.players); })
+    api.get('/users/leaderboard')
+      .then(r => { if (r.data?.data?.leaderboard?.length) setPlayers(r.data.data.leaderboard); })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [tier]);
@@ -69,7 +67,7 @@ export default function LeaderboardPage() {
         {filtered.map((p, i) => (
           <motion.div key={p.id} className={`${s.row}${i % 2 === 0 ? ' ' + s.even : ''}`}
             initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * .025 }}
-            onClick={() => nav(`/app/profile/${p.username}`)}>
+            style={{ cursor: 'default' }}>
             <div className={s.thRank}>
               {p.rank <= 3
                 ? <span className={s.medal}>{p.rank === 1 ? '🥇' : p.rank === 2 ? '🥈' : '🥉'}</span>

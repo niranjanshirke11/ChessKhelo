@@ -211,13 +211,6 @@ export const useGame = create<GS>((set, get) => ({
       if (t <= 10) sounds.lowTime();
       if (t === 0) {
         get().endGame('0-1', 'timeout', -15);
-        // Report to backend
-        const { gameId } = get();
-        if (gameId) {
-          import('../services/socket').then(({ getSocket }) => {
-            getSocket().emit('game:report_result', { gameId, result: '0-1', termination: 'timeout' });
-          });
-        }
       }
     } else {
       const t = Math.max(0, timeB - 1);
@@ -225,12 +218,6 @@ export const useGame = create<GS>((set, get) => ({
       if (t <= 10) sounds.lowTime();
       if (t === 0) {
         get().endGame('1-0', 'timeout', 15);
-        const { gameId } = get();
-        if (gameId) {
-          import('../services/socket').then(({ getSocket }) => {
-            getSocket().emit('game:report_result', { gameId, result: '1-0', termination: 'timeout' });
-          });
-        }
       }
     }
   },

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../store/authStore';
@@ -19,15 +19,13 @@ export default function AuthPage() {
   
   const [form, setForm] = useState({
     username: '',
-    email: '',
     password: '',
     country: '🌍',
   });
   
   const [showPwd, setShowPwd] = useState(false);
-  const [gLoading, setGLoading] = useState(false);
   
-  const { login, register, guestLogin, googleLogin, isLoading, error, clearError, isAuthenticated, loadDemo } = useAuth();
+  const { login, register, guestLogin, isLoading, error, clearError, isAuthenticated, loadDemo } = useAuth();
   const nav = useNavigate();
 
   useEffect(() => { 
@@ -50,56 +48,14 @@ export default function AuthPage() {
       if (mode === 'guest') {
         await guestLogin(form.username, form.country);
       } else if (mode === 'login') {
-        await login(form.username || form.email, form.password);
+        await login(form.username, form.password);
       } else {
-        await register(form.username, form.email, form.password, form.country);
+        await register(form.username, form.password, form.country);
       }
     } catch (_) {}
   };
 
-  const handleGoogleLogin = useCallback(() => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId) {
-      guestLogin(form.username || 'GoogleUser', form.country);
-      return;
-    }
-    
-    const redirectUri = window.location.origin;
-    const scope = 'email profile';
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
-    
-    const width = 500, height = 600;
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
-    const popup = window.open(url, 'google-login', `width=${width},height=${height},left=${left},top=${top}`);
-
-    setGLoading(true);
-
-    const timer = setInterval(async () => {
-      try {
-        if (!popup || popup.closed) { 
-          clearInterval(timer); 
-          setGLoading(false); 
-          return; 
-        }
-        const popupUrl = popup.location.href;
-        if (popupUrl.includes('access_token')) {
-          clearInterval(timer);
-          popup.close();
-          const hash = new URL(popupUrl).hash.substring(1);
-          const p = new URLSearchParams(hash);
-          const accessToken = p.get('access_token');
-          if (accessToken) {
-            const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-              headers: { Authorization: `Bearer ${accessToken}` }
-            }).then(r => r.json());
-            await googleLogin(accessToken, userInfo);
-          }
-          setGLoading(false);
-        }
-      } catch (_) {}
-    }, 500);
-  }, [googleLogin, guestLogin, form.username, form.country]);
+  // Google OAuth removed — use guest or register instead
 
   return (
     <div className={s.page}>
@@ -213,17 +169,7 @@ export default function AuthPage() {
                   <span className={s.hint}>Simple password (min 3 characters)</span>
                 </div>
 
-                <div className={s.field}>
-                  <label className={s.label}>Email (Optional)</label>
-                  <input 
-                    className="input"
-                    type="email" 
-                    placeholder="you@example.com (optional)" 
-                    value={form.email}
-                    onChange={e => upd('email', e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && submit()} 
-                  />
-                </div>
+
 
                 <div className={s.field}>
                   <label className={s.label}>Country Flag</label>
@@ -246,16 +192,12 @@ export default function AuthPage() {
             {mode === 'login' && (
               <>
                 <div className={s.field}>
-                  <label className={s.label}>Username or Email</label>
+                  <label className={s.label}>Username</label>
                   <input 
                     className="input"
-                    placeholder="Username or your email" 
-                    value={form.username || form.email}
-                    onChange={e => {
-                      const v = e.target.value;
-                      setForm(f => ({ ...f, username: v, email: v }));
-                      clearError();
-                    }}
+                    placeholder="Enter your username" 
+                    value={form.username}
+                    onChange={e => upd('username', e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && submit()} 
                   />
                 </div>
@@ -298,11 +240,7 @@ export default function AuthPage() {
             </button>
 
             {/* Optional Google Login */}
-            {import.meta.env.VITE_GOOGLE_CLIENT_ID && (
-              <button type="button" className={s.googleBtn} onClick={handleGoogleLogin} disabled={gLoading || isLoading}>
-                {gLoading ? <span className="spinner" /> : 'Sign in with Google'}
-              </button>
-            )}
+            {/* Google login removed for simplified version */}
           </motion.div>
         </AnimatePresence>
 

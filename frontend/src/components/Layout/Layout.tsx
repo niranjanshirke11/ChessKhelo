@@ -7,10 +7,8 @@ const TC: Record<string, string> = { Diamond: '#00d4ff', Platinum: '#a855f7', Go
 const LINKS = [
   { to: '/app/play',        l: '♟  Play'        },
   { to: '/app/puzzles',     l: '🧩 Puzzles'      },
-  { to: '/app/friends',     l: '👥 Friends'      },
+  { to: '/app/analysis',    l: '🔍 Analysis'     },
   { to: '/app/leaderboard', l: '🏆 Leaderboard'  },
-  { to: '/app/profile',     l: '📊 Profile'      },
-  { to: '/app/pricing',     l: '💎 Premium'      },
 ];
 
 export default function Layout() {

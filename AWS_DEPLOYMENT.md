@@ -1,19 +1,23 @@
-# ☁️ ChessKhelo — AWS Cloud Deployment Guide (Beginner Friendly)
+# ☁️ ChessKhelo — Simplified AWS Cloud Deployment Guide
 
 This guide is written for students and developers deploying their first application to **Amazon Web Services (AWS)**. It explains every cloud concept simply, warns you about costs, provides exact commands, and guides you through every step.
+
+This guide reflects the **simplified architecture**:
+- **No Database** (All data is in-memory).
+- **No WebSockets** (Multiplayer removed, Play vs AI only).
 
 ---
 
 ## 🏗 AWS Architecture for ChessKhelo
 
-We choose the **simplest, most reliable, and cost-effective architecture**:
+We chose the **simplest, most reliable, and cost-effective architecture**:
 
-```
+```text
                              [ User Browser ]
                                      │
                ┌─────────────────────┴─────────────────────┐
                │                                           │
-         (Static Files)                            (API & WebSockets)
+         (Static Files)                              (REST API)
                │                                           │
                ▼                                           ▼
       ┌─────────────────┐                        ┌───────────────────┐
@@ -21,19 +25,16 @@ We choose the **simplest, most reliable, and cost-effective architecture**:
       │   (Global CDN)  │                        │ (Ubuntu 22.04 LTS)│
       └────────┬────────┘                        │   Node.js + PM2   │
                │                                 │   Nginx Proxy     │
-               ▼                                 └─────────┬─────────┘
-      ┌─────────────────┐                                  │
-      │  AWS S3 Bucket  │                                  ▼
-      │ (React Frontend)│                        ┌───────────────────┐
-      └─────────────────┘                        │ MongoDB Atlas (DB)│
-                                                 │   (Free Tier M0)  │
-                                                 └───────────────────┘
+               ▼                                 └───────────────────┘
+      ┌─────────────────┐
+      │  AWS S3 Bucket  │
+      │ (React Frontend)│
+      └─────────────────┘
 ```
 
 ### Why this architecture?
 1. **Frontend on S3 + CloudFront:** S3 stores static HTML/JS/CSS files with 99.99% availability. CloudFront delivers files with low latency via edge servers worldwide and provides free HTTPS.
-2. **Backend on EC2:** Real-time WebSockets (Socket.IO) require a persistent TCP connection. An EC2 virtual machine maintains active socket connections cleanly and easily without serverless timeouts.
-3. **Database on MongoDB Atlas:** A cloud-managed NoSQL database that automatically handles backups, connection pooling, and requires zero database administration on EC2.
+2. **Backend on EC2:** An EC2 virtual machine is a perfect environment to run a basic Node.js Express server. Since there is no database, the backend handles all application logic and state in-memory.
 
 ---
 
@@ -97,251 +98,161 @@ We choose the **simplest, most reliable, and cost-effective architecture**:
 Open PowerShell (or Terminal) on your local computer where you saved `chesskhelo-key.pem`:
 
 ```bash
-# Set secure permissions (Linux/Mac)
-chmod 400 chesskhelo-key.pem
-
-# Connect via SSH (replace with your EC2 Public IP from AWS console)
+# Connect to the server using the Public IPv4 address from your EC2 dashboard
 ssh -i "chesskhelo-key.pem" ubuntu@<YOUR_EC2_PUBLIC_IP>
 ```
 
 ---
 
-### 3. Install Node.js, Git, PM2 & Nginx on EC2:
+### 3. Setup Server Dependencies (Run on EC2):
 
-Run the following commands inside your EC2 terminal:
+Once connected to the server, run these commands to install Node.js and PM2:
 
 ```bash
 # Update package lists
 sudo apt update && sudo apt upgrade -y
 
-# Install Node.js 20 LTS
+# Install Node.js 20.x
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs git nginx
+sudo apt install -y nodejs
 
-# Verify installations
-node -v    # Should show v20.x
-npm -v     # Should show v10.x
-
-# Install PM2 (Process Manager to keep backend running 24/7)
+# Install PM2 globally (Process Manager to keep the backend running)
 sudo npm install -g pm2
 ```
 
 ---
 
-### 4. Clone and Configure ChessKhelo on EC2:
+### 4. Upload & Start the Backend (Run on EC2):
 
+1. **Clone the code** onto the server (or upload it via `scp` / Git). For example, if using Git:
 ```bash
-# Clone your project repository (or upload your code)
-git clone https://github.com/<your-username>/ChessKhelo.git
-cd ChessKhelo/backend
+git clone <YOUR_GITHUB_REPO_URL> chesskhelo
+cd chesskhelo/backend
+```
 
-# Install backend dependencies
+2. **Install dependencies and build:**
+```bash
 npm install
-
-# Create production .env file
-nano .env
-```
-
-Paste your production environment variables into `.env`:
-```env
-PORT=5000
-NODE_ENV=production
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/chesskhelo?retryWrites=true&w=majority
-JWT_SECRET=your_production_secret_key_generated_randomly_32_chars
-JWT_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=your_production_refresh_secret_key_32_chars
-JWT_REFRESH_EXPIRES_IN=30d
-FRONTEND_URL=https://<your-cloudfront-domain-or-s3-url>
-```
-Press `Ctrl + O`, then `Enter` to save, and `Ctrl + X` to exit `nano`.
-
----
-
-### 5. Build and Start Backend with PM2:
-
-```bash
-# Compile TypeScript to production JavaScript (dist/ folder)
 npm run build
-
-# Start backend using PM2
-pm2 start dist/index.js --name "chesskhelo-api"
-
-# Ensure PM2 restarts automatically if the EC2 server reboots
-pm2 startup
-pm2 save
 ```
 
-Verify the backend is running:
+3. **Start the server with PM2:**
 ```bash
-pm2 status
-curl http://localhost:5000/health
-# Output: {"status":"ok","time":"...","env":"production"}
+# Set port environment variable (default 5000 is fine)
+pm2 start dist/index.js --name "chesskhelo-api" --env PORT=5000
+
+# Save PM2 process list so it restarts on server reboot
+pm2 save
+pm2 startup
 ```
 
 ---
 
-### 6. Configure Nginx Reverse Proxy on EC2:
+### 5. Setup Nginx Reverse Proxy (Run on EC2):
 
-Nginx will receive traffic on Port 80 (HTTP) and route `/api` and `/socket.io` to Node.js on Port 5000.
+Nginx will safely route traffic from Port 80 (HTTP) to your Node.js app running on Port 5000.
 
-Edit Nginx default site configuration:
 ```bash
+# Install Nginx
+sudo apt install -y nginx
+
+# Open the Nginx default configuration file
 sudo nano /etc/nginx/sites-available/default
 ```
 
-Replace the file contents with:
+Delete everything in the file and replace it with:
+
 ```nginx
 server {
-    listen 80 default_server;
-    listen [::]80 default_server;
-
+    listen 80;
     server_name _;
 
-    # REST API routing
-    location /api/ {
-        proxy_pass http://127.0.0.1:5000/api/;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-
-    # Health check routing
-    location /health {
-        proxy_pass http://127.0.0.1:5000/health;
-        proxy_set_header Host $host;
-    }
-
-    # WebSocket (Socket.IO) routing
-    location /socket.io/ {
-        proxy_pass http://127.0.0.1:5000/socket.io/;
+    location / {
+        proxy_pass http://localhost:5000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
+        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
-        proxy_read_timeout 86400s;
-        proxy_send_timeout 86400s;
     }
 }
 ```
 
-Test and reload Nginx:
+Save and exit (`Ctrl+O`, `Enter`, `Ctrl+X`).
+
+Restart Nginx:
 ```bash
-sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-Now, opening `http://<YOUR_EC2_PUBLIC_IP>/health` in any browser will return `{"status":"ok"}`.
+✅ **Your backend is now live!** If you go to `http://<YOUR_EC2_PUBLIC_IP>/health` in your browser, you should see `{ "status": "ok" }`.
 
 ---
 
 ## 🌐 Step 3: Deploying the Frontend on AWS S3 & CloudFront
 
-### 1. Build the Production Frontend Locally:
+Before deploying, update `frontend/.env` locally:
+```env
+# Change this to your EC2 public IP
+VITE_API_URL=http://<YOUR_EC2_PUBLIC_IP>
+```
 
-On your local development computer:
+Then, build the frontend on your computer:
 ```bash
 cd frontend
-
-# Set the production backend URL in frontend/.env
-# Replace with your EC2 public IP or domain
-echo "VITE_API_URL=http://<YOUR_EC2_PUBLIC_IP>/api" > .env
-echo "VITE_SOCKET_URL=http://<YOUR_EC2_PUBLIC_IP>" >> .env
-
-# Build optimized production bundle
 npm run build
 ```
-This creates a `frontend/dist` directory containing static HTML, JS, and CSS files.
+This generates a `dist` folder containing your static website.
 
----
-
-### 2. Create and Configure AWS S3 Bucket:
-1. Go to AWS Console → Search for **S3** → Click **Create bucket**.
-2. **Bucket Name:** `chesskhelo-frontend-<random-number>` (must be globally unique).
-3. **AWS Region:** Choose the region closest to you (e.g. `ap-south-1` for Mumbai, `us-east-1` for Virginia).
-4. Uncheck **Block all public access** (acknowledge the warning).
+### 1. Create an S3 Bucket:
+1. Search for **S3** in the AWS Console.
+2. Click **Create bucket**.
+3. **Bucket Name:** `chesskhelo-frontend-<yourname>` (must be globally unique).
+4. **Block Public Access:** UNCHECK "Block all public access" (acknowledge the warning).
 5. Click **Create bucket**.
 
-#### Enable Static Website Hosting:
-1. Click your bucket name → Go to **Properties** tab.
-2. Scroll to the bottom → Click **Edit** under **Static website hosting**.
+### 2. Enable Static Website Hosting:
+1. Open your new bucket → Go to the **Properties** tab.
+2. Scroll down to **Static website hosting** → Click **Edit**.
 3. Select **Enable**.
 4. **Index document:** `index.html`.
-5. **Error document:** `index.html` (Required for React Router SPA navigation).
+5. **Error document:** `index.html` (Important for React Router).
 6. Click **Save changes**.
 
-#### Set Bucket Policy (Allow Public Read):
-1. Go to **Permissions** tab → Click **Edit** under **Bucket policy**.
-2. Paste this JSON (replace `your-bucket-name` with your actual bucket name):
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Sid": "PublicReadGetObject",
-         "Effect": "Allow",
-         "Principal": "*",
-         "Action": "s3:GetObject",
-         "Resource": "arn:aws:s3:::your-bucket-name/*"
-       }
-     ]
-   }
-   ```
-3. Click **Save changes**.
+### 3. Add Bucket Policy (Permissions):
+1. Go to the **Permissions** tab.
+2. Scroll to **Bucket policy** → Click **Edit**.
+3. Paste the following JSON (replace `<YOUR_BUCKET_NAME>` with your actual bucket name):
 
----
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::<YOUR_BUCKET_NAME>/*"
+        }
+    ]
+}
+```
+4. Click **Save changes**.
 
-### 3. Upload Frontend Files to S3:
-1. Inside your bucket, go to the **Objects** tab.
-2. Click **Upload** → **Add files** & **Add folder**.
-3. Upload all contents from inside your local `frontend/dist/` folder (including `index.html`, `assets/`, etc.).
-4. Click **Upload**.
+### 4. Upload Frontend Files:
+1. Go to the **Objects** tab → Click **Upload**.
+2. Drag and drop all files and folders **from inside your local `frontend/dist` folder**.
+3. Click **Upload**.
 
-Your frontend is now live at the S3 Website Endpoint!
+### 5. Setup CloudFront (Optional but Recommended for HTTPS):
+If you use the S3 URL, it will be `http://...`. Browsers might block requests to your API. CloudFront gives you a free SSL certificate.
 
----
+1. Search for **CloudFront** in the AWS Console → Click **Create Distribution**.
+2. **Origin Domain:** Select your S3 Bucket from the dropdown.
+3. **Viewer Protocol Policy:** Choose **Redirect HTTP to HTTPS**.
+4. Scroll down and click **Create Distribution**.
+5. Wait for it to deploy. Copy the **Distribution domain name** (e.g., `d12345.cloudfront.net`).
+6. Visit that URL in your browser.
 
-### 4. Create CloudFront Distribution (HTTPS & CDN):
-1. Go to AWS Console → Search for **CloudFront** → Click **Create distribution**.
-2. **Origin domain:** Select your S3 bucket website endpoint.
-3. **Viewer protocol policy:** Select **Redirect HTTP to HTTPS**.
-4. **Allowed HTTP methods:** Select `GET, HEAD, OPTIONS`.
-5. Under **Custom error response** (in CloudFront after creation):
-   - HTTP error code: `403` & `404`
-   - Response page path: `/index.html`
-   - HTTP response code: `200` (Ensures browser refreshes work with client routing).
-6. Click **Create distribution**.
-7. Copy the **Distribution domain name** (e.g. `d1234abcd.cloudfront.net`).
-
----
-
-## 🔒 Step 4: Configure HTTPS & Domain (Optional)
-
-1. **Free SSL Certificate:** Use **AWS Certificate Manager (ACM)** in `us-east-1` to request a free public certificate for your custom domain.
-2. **DNS Routing:** Use **AWS Route 53** to route your domain name (e.g., `chesskhelo.com`) to your CloudFront distribution (Frontend) and an Elastic IP attached to your EC2 instance (Backend).
-
----
-
-## 📊 Step 5: Monitoring with AWS CloudWatch
-
-1. Open AWS Console → Search for **CloudWatch**.
-2. Go to **Metrics** → **EC2** → **Per-Instance Metrics**.
-3. View **CPUUtilization**, **NetworkIn**, **NetworkOut**, and **StatusCheckFailed**.
-4. **Create Alarm:** Set an alarm to email you if CPU utilization exceeds 80% for 5 minutes.
-
----
-
-## ✅ Production Verification Checklist
-
-| Test Item | Verification Method | Expected Result |
-|---|---|---|
-| **Health Check** | Open `http://<EC2_IP>/health` in browser | `{"status":"ok"}` response |
-| **Frontend Load** | Open CloudFront / S3 URL | ChessKhelo landing page renders cleanly |
-| **Sign Up & Login** | Register a new user account | JWT received; redirected to `/app/play` |
-| **Demo Mode** | Click "♟ Try Demo Account" | Instant login with demo user profile |
-| **Multiplayer Match** | Open two different browser windows | Matchmaking pairs players; board loads |
-| **Move Sync** | Make move e2-e4 in Tab 1 | Tab 2 instantly updates move and clock |
-| **Bot Game** | Play vs AI (Level 4) | Stockfish moves within 0.5s with sounds |
-| **Leaderboard** | Navigate to `/app/leaderboard` | Ranked players list displayed with ratings |
-| **Server Resilience**| Run `pm2 restart chesskhelo-api` on EC2 | Application resumes with zero data loss |
+🎉 **Deployment Complete! Your simplified ChessKhelo app is live.**
